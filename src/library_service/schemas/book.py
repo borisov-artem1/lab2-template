@@ -8,25 +8,25 @@ class BookBase(BaseModel):
     name: constr(max_length=255)
     author: constr(max_length=255)
     genre: constr(max_length=255)
-    status: ConditionStatus
+    condition: ConditionStatus
 
 
 class BookFilter(BaseModel):
     name: constr(max_length=255) | None = None
     author: constr(max_length=255) | None = None
     genre: constr(max_length=255) | None = None
-    status: ConditionStatus | None = None
+    condition: ConditionStatus | None = None
     
 
 class BookUpdate(BaseModel):
     name: constr(max_length=255) | None = None
     author: constr(max_length=255) | None = None
     genre: constr(max_length=255) | None = None
-    status: ConditionStatus | None = None
+    condition: ConditionStatus | None = None
 
 
 class BookCreate(BookBase):
-    status: ConditionStatus = "EXCELLENT"
+    condition: ConditionStatus = "EXCELLENT"
 
 
 class Book(BookBase):

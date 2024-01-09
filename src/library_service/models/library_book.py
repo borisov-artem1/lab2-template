@@ -1,5 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer
 
+from models.book import BookModel
+from models.library import LibraryModel
 from utils.database import Base
 
 
