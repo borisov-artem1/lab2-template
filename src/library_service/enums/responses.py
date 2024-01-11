@@ -3,114 +3,167 @@ from enum import Enum
 from schemas.response import ErrorResponse, ValidationErrorResponse
 
 
-class RespPrivilegeEnum(Enum):
-    GetAll = {
-        "description": "All Privileges",
-    }
-    GetByID = {
-        "description": "Privilege by ID",
-    }
-    Created = {
-        "description": "Created new Privilege",
-        "headers": {
-            "Location": {
-                "description": "Path to new Privilege",
-                "style": "simple",
-                "schema": {
-                    "type": "string"
-                }
-            }
-        },
-        "content": {
-            "application/octet-stream": {
-                "example": ""
-            }
-        },
-    }
-    Delete = {
-        "description": "Privilege by ID was removed",
-        "content": {
-            "application/octet-stream": {
-                "example": ""
-            }
-        },
-    }
-    Patch = {
-        "description": "Privilege by ID was updated",
-    }
+class RespLibraryEnum(Enum):
+  GetAll = {
+    "description": "All Library",
+  }
+  GetByuid = {
+    "description": "Library by uid",
+  }
+  Created = {
+    "description": "Created new Library",
+    "headers": {
+      "Location": {
+        "description": "Path to new Library",
+        "style": "simple",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "content": {
+      "application/octet-stream": {
+        "example": ""
+      }
+    },
+  }
+  Delete = {
+    "description": "Library by uid was removed",
+    "content": {
+      "application/octet-stream": {
+        "example": ""
+      }
+    },
+  }
+  Patch = {
+    "description": "Library by uid was updated",
+  }
 
 
-    InvalidData = {
-        "model": ValidationErrorResponse,
-        "description": "Invalid data",
-    }
-    NotFound = {
-        "model": ErrorResponse,
-        "description": "Not found Privilege by ID",
-    }
-    Conflict = {
-        "model": ErrorResponse,
-        "description": "Conflict",
-    }
+  InvalidData = {
+    "model": ValidationErrorResponse,
+    "description": "Invalid data",
+  }
+  NotFound = {
+    "model": ErrorResponse,
+    "description": "Not found Library by uid",
+  }
+  Conflict = {
+    "model": ErrorResponse,
+    "description": "Conflict",
+  }
 
 
-class RespPrivilegeHistoryEnum(Enum):
-    GetAll = {
-        "description": "All Privilege Histories",
-    }
-    GetByID = {
-        "description": "Privilege History by ID",
-    }
-    Created = {
-        "description": "Created new Privilege History",
-        "headers": {
-            "Location": {
-                "description": "Path to new Privilege History",
-                "style": "simple",
-                "schema": {
-                    "type": "string"
-                }
-            }
-        },
-        "content": {
-            "application/octet-stream": {
-                "example": ""
-            }
-        },
-    }
-    Delete = {
-        "description": "Privilege History by ID was removed",
-        "content": {
-            "application/octet-stream": {
-                "example": ""
-            }
-        },
-    }
-    Patch = {
-        "description": "Privilege History by ID was updated",
-    }
+class RespBookEnum(Enum):
+  GetAll = {
+    "description": "All Book",
+  }
+  GetByuid = {
+    "description": "Book by uid",
+  }
+  Created = {
+    "description": "Created new Book",
+    "headers": {
+      "Location": {
+        "description": "Path to new Book",
+        "style": "simple",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "content": {
+      "application/octet-stream": {
+        "example": ""
+      }
+    },
+  }
+  Delete = {
+    "description": "Book by uid was removed",
+    "content": {
+      "application/octet-stream": {
+        "example": ""
+      }
+    },
+  }
+  Patch = {
+    "description": "Book by uid was updated",
+  }
 
 
-    InvalidData = {
-        "model": ValidationErrorResponse,
-        "description": "Invalid data",
-    }
-    NotFound = {
-        "model": ErrorResponse,
-        "description": "Not found Privilege History by ID",
-    }
-    Conflict = {
-        "model": ErrorResponse,
-        "description": "Conflict",
-    }
+  InvalidData = {
+    "model": ValidationErrorResponse,
+    "description": "Invalid data",
+  }
+  NotFound = {
+    "model": ErrorResponse,
+    "description": "Not found Book by uid",
+  }
+  Conflict = {
+    "model": ErrorResponse,
+    "description": "Conflict",
+  }
+
+
+
+
+class RespLibraryBookEnum(Enum):
+  GetAll = {
+    "description": "All LibraryBook",
+  }
+  GetByuid = {
+    "description": "LibraryBook by uid",
+  }
+  Created = {
+    "description": "Created new LibraryBook",
+    "headers": {
+      "Location": {
+        "description": "Path to new LibraryBook",
+        "style": "simple",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "content": {
+      "application/octet-stream": {
+        "example": ""
+      }
+    },
+  }
+  Delete = {
+    "description": "LibraryBook by uid was removed",
+    "content": {
+      "application/octet-stream": {
+        "example": ""
+      }
+    },
+  }
+  Patch = {
+    "description": "LibraryBook by uid was updated",
+  }
+
+
+  InvalidData = {
+    "model": ValidationErrorResponse,
+    "description": "Invalid data",
+  }
+  NotFound = {
+    "model": ErrorResponse,
+    "description": "Not found LibraryBook by uid",
+  }
+  Conflict = {
+    "model": ErrorResponse,
+    "description": "Conflict",
+  }
 
 
 class RespManageEnum(Enum):
-    Health = {
-        "description": "Bonus server is ready to work",
-        "content": {
-            "application/octet-stream": {
-                "example": ""
-            }
-        },
-    }
+  Health = {
+    "description": "Bonus server is ready to work",
+    "content": {
+      "application/octet-stream": {
+        "example": ""
+      }
+    },
+  }
