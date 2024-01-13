@@ -140,9 +140,13 @@ async def delete_library(
   libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
   uid: UUID,
 ):
-  return await LibraryService(
+  await LibraryService(
     libraryCRUD=libraryCRUD,
     db=db,
   ).delete(
     uid=uid,
+  )
+
+  return Response(
+    status_code=status.HTTP_204_NO_CONTENT,
   )

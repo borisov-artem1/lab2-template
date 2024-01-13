@@ -27,7 +27,7 @@ class LibraryService():
       self, 
       uid: UUID,
   ):
-    library = self._libraryCRUD.get_by_uid(uid)
+    library = await self._libraryCRUD.get_by_uid(uid)
     if library is None:
       raise NotFoundException(prefix="get library")
     
@@ -63,8 +63,8 @@ class LibraryService():
       self,
       uid: UUID,
   ):
-    library = await self._libraryCRUD.delete(uid)
+    library = await self._libraryCRUD.get_by_uid(uid)
     if library is None:
       raise NotFoundException(prefix="delete library")
     
-    return library
+    return await self._libraryCRUD.delete(library)

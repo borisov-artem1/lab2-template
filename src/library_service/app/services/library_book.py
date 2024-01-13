@@ -1,4 +1,3 @@
-from uuid import UUID
 from sqlalchemy.orm import Session
 
 from cruds.library_book import LibraryBookCRUD
@@ -23,11 +22,11 @@ class LibraryBookService():
       limit=size,
     )
   
-  async def get_by_uid(
+  async def get_by_id(
       self, 
-      uid: UUID,
+      id: int,
   ):
-    library_book = self._library_bookCRUD.get_by_uid(uid)
+    library_book = await self._library_bookCRUD.get_by_id(id)
     if library_book is None:
       raise NotFoundException(prefix="get library_book")
     
@@ -46,10 +45,10 @@ class LibraryBookService():
   
   async def patch(
       self,
-      uid: UUID,
+      id: int,
       library_book_patch: LibraryBookUpdate,
   ):
-    library_book = await self._library_bookCRUD.get_by_uid(uid)
+    library_book = await self._library_bookCRUD.get_by_id(id)
     if library_book is None:
       raise NotFoundException(prefix="patch library_book")
     
@@ -61,10 +60,10 @@ class LibraryBookService():
   
   async def delete(
       self,
-      uid: UUID,
+      id: int,
   ):
-    library_book = await self._library_bookCRUD.delete(uid)
+    library_book = await self._library_bookCRUD.get_by_id(id)
     if library_book is None:
       raise NotFoundException(prefix="delete library_book")
     
-    return library_book
+    return await self._library_bookCRUD.delete(library_book)

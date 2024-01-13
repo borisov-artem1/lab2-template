@@ -7,7 +7,7 @@ class RespLibraryEnum(Enum):
   GetAll = {
     "description": "All Library",
   }
-  GetByuid = {
+  GetByUID = {
     "description": "Library by uid",
   }
   Created = {
@@ -58,7 +58,7 @@ class RespBookEnum(Enum):
   GetAll = {
     "description": "All Book",
   }
-  GetByuid = {
+  GetByUID = {
     "description": "Book by uid",
   }
   Created = {
@@ -111,8 +111,8 @@ class RespLibraryBookEnum(Enum):
   GetAll = {
     "description": "All LibraryBook",
   }
-  GetByuid = {
-    "description": "LibraryBook by uid",
+  GetByID = {
+    "description": "LibraryBook by id",
   }
   Created = {
     "description": "Created new LibraryBook",
@@ -132,7 +132,7 @@ class RespLibraryBookEnum(Enum):
     },
   }
   Delete = {
-    "description": "LibraryBook by uid was removed",
+    "description": "LibraryBook by id was removed",
     "content": {
       "application/octet-stream": {
         "example": ""
@@ -140,7 +140,7 @@ class RespLibraryBookEnum(Enum):
     },
   }
   Patch = {
-    "description": "LibraryBook by uid was updated",
+    "description": "LibraryBook by id was updated",
   }
 
 
@@ -150,7 +150,7 @@ class RespLibraryBookEnum(Enum):
   }
   NotFound = {
     "model": ErrorResponse,
-    "description": "Not found LibraryBook by uid",
+    "description": "Not found LibraryBook by id",
   }
   Conflict = {
     "model": ErrorResponse,
@@ -160,7 +160,7 @@ class RespLibraryBookEnum(Enum):
 
 class RespManageEnum(Enum):
   Health = {
-    "description": "Bonus server is ready to work",
+    "description": "Library server is ready to work",
     "content": {
       "application/octet-stream": {
         "example": ""

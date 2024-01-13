@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 
 from cruds.book import BookCRUD
 from enums.responses import RespBookEnum
-from schemas.book import Book, BookFilter, BookCreate, BookUpdate, ConditionStatus
+from enums.status import ConditionStatus
+from schemas.book import Book, BookFilter, BookCreate, BookUpdate
 from utils.database import get_db
 from services.book import BookService
 
@@ -142,9 +143,13 @@ async def delete_book(
   bookCRUD: Annotated[BookCRUD, Depends(get_book_crud)],
   uid: UUID,
 ):
-  return await BookService(
+  await BookService(
     bookCRUD=bookCRUD,
     db=db,
   ).delete(
     uid=uid,
+  )
+
+  return Response(
+    status_code=status.HTTP_204_NO_CONTENT,
   )

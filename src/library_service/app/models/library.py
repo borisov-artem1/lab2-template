@@ -10,6 +10,6 @@ class LibraryModel(Base):
   
   id          = Column(Integer, primary_key=True, index=True)
   library_uid = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
-  name        = Column(String(80), nullable=False)
+  name        = Column(String(80), unique=True, nullable=False)
   city        = Column(String(255), nullable=False)
   address     = Column(String(255), nullable=False)

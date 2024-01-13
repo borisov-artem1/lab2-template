@@ -1,4 +1,3 @@
-from uuid import UUID
 from sqlalchemy.orm import Session, Query
 
 from schemas.library_book import LibraryBookFilter, LibraryBookUpdate
@@ -54,14 +53,16 @@ class LibraryBookCRUD():
 
   async def __filter_library_books(
       self,
-      libraries: Query[LibraryBookModel],
+      library_books: Query[LibraryBookModel],
       filter: LibraryBookFilter
     ) -> Query[LibraryBookModel]:
     if filter.book_id:
-      libraries.filter(LibraryBookModel.book_id == filter.book_id)
+      library_books.filter(LibraryBookModel.book_id == filter.book_id)
 
     if filter.library_id:
-      libraries.filter(LibraryBookModel.library_id == filter.library_id)
+      library_books.filter(LibraryBookModel.library_id == filter.library_id)
 
     if filter.available_count:
-      libraries.filter(LibraryBookModel.available_count == filter.available_count)
+      library_books.filter(LibraryBookModel.available_count == filter.available_count)
+
+    return library_books

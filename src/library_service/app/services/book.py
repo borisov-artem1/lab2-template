@@ -27,7 +27,7 @@ class BookService():
       self, 
       uid: UUID,
   ):
-    book = self._bookCRUD.get_by_uid(uid)
+    book = await self._bookCRUD.get_by_uid(uid)
     if book is None:
       raise NotFoundException(prefix="get book")
     
@@ -63,8 +63,8 @@ class BookService():
       self,
       uid: UUID,
   ):
-    book = await self._bookCRUD.delete(uid)
+    book = await self._bookCRUD.get_by_uid(uid)
     if book is None:
       raise NotFoundException(prefix="delete book")
     
-    return book
+    return await self._bookCRUD.delete(book)

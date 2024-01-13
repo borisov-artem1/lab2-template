@@ -1,20 +1,49 @@
-version: "3"
-services:
-  postgres:
-    image: library/postgres:13
-    container_name: postgres
-    restart: on-failure
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: postgres
-    volumes:
-      - db-data:/var/lib/postgresql/data
-      - ./postgres/:/docker-entrypoint-initdb.d/
-    ports:
-      - "5432:5432"
+version: '3.1'
 
-# TODO добавить сервисы
+services:
+  library_database:
+    image: postgres:16-alpine
+    container_name: library_database
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=library_db
+    volumes:
+      - ./pg_data_library:/var/lib/postgresql/data
+      # - ./library_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  library_service:
+    image: library_service
+    container_name: library_service
+    build:
+      context: "."
+      dockerfile: ./docker/library.Dockerfile
+    ports:
+      - "8060:8060"
+    networks:
+      - default
+    depends_on:
+      library_database:
+        condition: service_healthy
+
+
 
 volumes:
-  db-data:
+  pg_data_library:
+    driver: local
+  # pg_data_bonus:
+  #   driver: local
+  # pg_data_flight:
+  #   driver: local
+
+networks:
+  default:

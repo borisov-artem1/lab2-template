@@ -1,11 +1,10 @@
 from typing import Annotated
-from uuid import UUID
 from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
 from cruds.library_book import LibraryBookCRUD
 from enums.responses import RespLibraryBookEnum
-from schemas.library_book import LibraryBook, LibraryBookFilter, LibraryBookCreate, LibraryBookUpdate, ConditionStatus
+from schemas.library_book import LibraryBook, LibraryBookFilter, LibraryBookCreate, LibraryBookUpdate
 from utils.database import get_db
 from services.library_book import LibraryBookService
 
@@ -55,24 +54,24 @@ async def get_all_library_book(
 
 
 @router.get(
-  "/{uid}",
+  "/{id}",
   status_code=status.HTTP_200_OK,
   response_model=LibraryBook,
   responses={
-    status.HTTP_200_OK: RespLibraryBookEnum.GetByUID.value,
+    status.HTTP_200_OK: RespLibraryBookEnum.GetByID.value,
     status.HTTP_404_NOT_FOUND: RespLibraryBookEnum.NotFound.value,
   },
 )
-async def get_library_book_by_uid(
+async def get_library_book_by_id(
   db: Annotated[Session, Depends(get_db)],
   library_bookCRUD: Annotated[LibraryBookCRUD, Depends(get_library_book_crud)],
-  uid: UUID,
+  id: int,
 ):
   return await LibraryBookService(
     library_bookCRUD=library_bookCRUD,
     db=db,
-  ).get_by_uid(
-    uid=uid,
+  ).get_by_id(
+    id=id,
   )
 
 
@@ -98,12 +97,12 @@ async def create_library_book(
 
   return Response(
     status_code=status.HTTP_201_CREATED,
-    headers={"Location": f"/api/v1/library_book/{library_book.library_book_uid}"}
+    headers={"Location": f"/api/v1/library_book/{library_book.id}"}
   )
 
 
 @router.patch(
-  "/{uid}",
+  "/{id}",
   status_code=status.HTTP_200_OK,
   response_model=LibraryBook,
   responses={
@@ -114,20 +113,20 @@ async def create_library_book(
 async def update_library_book(
   db: Annotated[Session, Depends(get_db)],
   library_bookCRUD: Annotated[LibraryBookCRUD, Depends(get_library_book_crud)],
-  uid: UUID,
+  id: int,
   library_book_update: LibraryBookUpdate,
 ):
   return await LibraryBookService(
     library_bookCRUD=library_bookCRUD,
     db=db,
   ).patch(
-    uid=uid,
+    id=id,
     library_book_patch=library_book_update,
   )
 
 
 @router.delete(
-  "/{uid}/",
+  "/{id}/",
   status_code=status.HTTP_204_NO_CONTENT,
   response_class=Response,
   responses={
@@ -138,11 +137,15 @@ async def update_library_book(
 async def delete_library_book(
   db: Annotated[Session, Depends(get_db)],
   library_bookCRUD: Annotated[LibraryBookCRUD, Depends(get_library_book_crud)],
-  uid: UUID,
+  id: int,
 ):
-  return await LibraryBookService(
+  await LibraryBookService(
     library_bookCRUD=library_bookCRUD,
     db=db,
   ).delete(
-    uid=uid,
+    id=id,
+  )
+
+  return Response(
+    status_code=status.HTTP_204_NO_CONTENT,
   )

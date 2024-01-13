@@ -65,3 +65,5 @@ class LibraryCRUD():
 
     if filter.name:
       libraries.filter(LibraryModel.name == filter.name)
+
+    return libraries

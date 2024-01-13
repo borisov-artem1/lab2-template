@@ -1,0 +1,103 @@
+# # # version: "3"
+# # # services:
+# # #   postgres:
+# # #     image: library/postgres:13
+# # #     container_name: postgres
+# # #     restart: on-failure
+# # #     environment:
+# # #       POSTGRES_USER: postgres
+# # #       POSTGRES_PASSWORD: "postgres"
+# # #       POSTGRES_DB: postgres
+# # #     volumes:
+# # #       - db-data:/var/lib/postgresql/data
+# # #       - ./postgres/:/docker-entrypoint-initdb.d/
+# # #     ports:
+# # #       - "5432:5432"
+
+# # # # TODO добавить сервисы
+
+# # # volumes:
+# # #   db-data:
+
+
+# # # bonus_database:
+# # #     image: postgres:16-alpine
+# # #     container_name: bonus_database
+# # #     ports:
+# # #       - "5432:5432"
+# # #     environment:
+# # #       - POSTGRES_USER=postgres
+# # #       - POSTGRES_PASSWORD=password
+# # #       - POSTGRES_DB=bonus_db
+# # #     volumes:
+# # #       - ./pg_data_bonus:/var/lib/postgresql/data
+# # #       - ./bonus_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+# # #     networks:
+# # #       - default
+# # #     healthcheck:
+# # #       test: ["CMD-SHELL", "pg_isready -U postgres"]
+# # #       interval: 20s
+# # #       timeout: 15s
+# # #       retries: 10
+
+# # #   flight_database:
+# # #     image: postgres:16-alpine
+# # #     container_name: flight_database
+# # #     ports:
+# # #       - "5433:5432"
+# # #     environment:
+# # #       - POSTGRES_USER=postgres
+# # #       - POSTGRES_PASSWORD=password
+# # #       - POSTGRES_DB=flight_db
+# # #     volumes:
+# # #       - ./pg_data_flight:/var/lib/postgresql/data
+# # #       - ./flight_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+# # #     networks:
+# # #       - default
+# # #     healthcheck:
+# # #       test: ["CMD-SHELL", "pg_isready -U postgres"]
+# # #       interval: 20s
+# # #       timeout: 15s
+# # #       retries: 10
+
+
+
+# # bonus_service:
+# #     image: bonus_service
+# #     container_name: bonus_service
+# #     build:
+# #       context: "."
+# #       dockerfile: ./docker/bonus.Dockerfile
+# #     ports:
+# #       - "8050:8050"
+# #     networks:
+# #       - default
+# #     depends_on:
+# #       bonus_database:
+# #         condition: service_healthy
+
+# #   flight_service:
+# #     image: flight_service
+# #     container_name: flight_service
+# #     build:
+# #       context: "."
+# #       dockerfile: ./docker/flight.Dockerfile
+# #     ports:
+# #       - "8060:8060"
+# #     networks:
+# #       - default
+# #     depends_on:
+# #       flight_database:
+# #         condition: service_healthy
+
+
+#   gateway_service:
+#     image: gateway_service
+#     container_name: gateway_service
+#     build:
+#       context: "."
+#       dockerfile: ./docker/gateway.Dockerfile
+#     ports:
+#       - "8080:8080"
+#     networks:
+#       - default

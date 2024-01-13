@@ -54,17 +54,19 @@ class BookCRUD():
 
   async def __filter_books(
       self,
-      libraries: Query[BookModel],
+      books: Query[BookModel],
       filter: BookFilter
     ) -> Query[BookModel]:
     if filter.author:
-      libraries.filter(BookModel.author == filter.author)
+      books.filter(BookModel.author == filter.author)
 
     if filter.genre:
-      libraries.filter(BookModel.genre == filter.genre)
+      books.filter(BookModel.genre == filter.genre)
 
     if filter.name:
-      libraries.filter(BookModel.name == filter.name)
+      books.filter(BookModel.name == filter.name)
     
     if filter.condition:
-      libraries.filter(BookModel.condition == filter.condition)
+      books.filter(BookModel.condition == filter.condition)
+
+    return books
