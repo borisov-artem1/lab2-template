@@ -34,11 +34,11 @@ services:
     port: 8070
     log_level: "info"
     reload: True
-  # gateway:
-  #   host: "0.0.0.0"
-  #   port: 8080
-  #   log_level: "info"
-  #   reload: True
-  #   bonus_host:  bonus_service
-  #   flight_host: flight_service
-  #   ticket_host: ticket_service
+  gateway:
+    host: "0.0.0.0"
+    port: 8080
+    log_level: "info"
+    reload: True
+    library_host:  library_service
+    rating_host: rating_service
+    reservation_host: reservation_service
