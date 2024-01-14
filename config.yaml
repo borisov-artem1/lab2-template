@@ -2,15 +2,15 @@ databases:
   library_db:
     user: postgres
     password: password
-    db: library_db
-    host: library_database
+    db: libraries
+    host: postgres_db
     port: 5432
-  # flight_db:
-  #   user: postgres
-  #   password: password
-  #   db: flight_db
-  #   host: flight_database
-  #   port: 5432
+  rating_db:
+    user: postgres
+    password: password
+    db: ratings
+    host: postgres_db
+    port: 5432
   # ticket_db:
   #   user: postgres
   #   password: password
@@ -22,6 +22,11 @@ services:
   library:
     host: "0.0.0.0"
     port: 8060
+    log_level: "info"
+    reload: True
+  rating:
+    host: "0.0.0.0"
+    port: 8050
     log_level: "info"
     reload: True
   # flight:

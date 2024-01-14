@@ -105,8 +105,6 @@ class RespBookEnum(Enum):
   }
 
 
-
-
 class RespLibraryBookEnum(Enum):
   GetAll = {
     "description": "All LibraryBook",

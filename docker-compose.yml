@@ -1,24 +1,25 @@
 version: '3.1'
 
 services:
-  library_database:
+  postgres_db:
     image: postgres:16-alpine
-    container_name: library_database
+    container_name: postgres_db
     ports:
       - "5434:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=library_db
+      - POSTGRES_DB=postgres
     volumes:
-      - ./pg_data_library:/var/lib/postgresql/data
-      - ./src/library_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./pg_data:/var/lib/postgresql/data
+      # - ./src/library_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./postgres/:/docker-entrypoint-initdb.d/
     networks:
       - default
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
+      interval: 15s
+      timeout: 15s
       retries: 10
 
   library_service:
@@ -32,13 +33,27 @@ services:
     networks:
       - default
     depends_on:
-      library_database:
+      postgres_db:
+        condition: service_healthy
+
+  rating_service:
+    image: rating_service
+    container_name: rating_service
+    build:
+      context: "."
+      dockerfile: ./docker/rating.Dockerfile
+    ports:
+      - "8050:8050"
+    networks:
+      - default
+    depends_on:
+      postgres_db:
         condition: service_healthy
 
 
 
 volumes:
-  pg_data_library:
+  pg_data:
     driver: local
   # pg_data_bonus:
   #   driver: local
