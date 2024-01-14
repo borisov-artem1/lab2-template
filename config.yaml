@@ -11,12 +11,12 @@ databases:
     db: ratings
     host: postgres_db
     port: 5432
-  # ticket_db:
-  #   user: postgres
-  #   password: password
-  #   db: ticket_db
-  #   host: ticket_database
-  #   port: 5432
+  reservation_db:
+    user: postgres
+    password: password
+    db: reservations
+    host: postgres_db
+    port: 5432
 
 services:
   library:
@@ -29,16 +29,11 @@ services:
     port: 8050
     log_level: "info"
     reload: True
-  # flight:
-  #   host: "0.0.0.0"
-  #   port: 8060
-  #   log_level: "info"
-  #   reload: True
-  # ticket:
-  #   host: "0.0.0.0"
-  #   port: 8070
-  #   log_level: "info"
-  #   reload: True
+  reservation:
+    host: "0.0.0.0"
+    port: 8070
+    log_level: "info"
+    reload: True
   # gateway:
   #   host: "0.0.0.0"
   #   port: 8080

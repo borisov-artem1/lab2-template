@@ -50,6 +50,20 @@ services:
       postgres_db:
         condition: service_healthy
 
+  reservation_service:
+    image: reservation_service
+    container_name: reservation_service
+    build:
+      context: "."
+      dockerfile: ./docker/reservation.Dockerfile
+    ports:
+      - "8070:8070"
+    networks:
+      - default
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+
 
 
 volumes:
