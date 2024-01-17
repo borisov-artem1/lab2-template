@@ -32,7 +32,7 @@ class GatewayService():
       page: int = 1,
       size: int = 100,
   ):
-    libraries_json = await self._libraryCRUD.get_all_libraries(
+    libraries = await self._libraryCRUD.get_all_libraries(
       page=page,
       size=size,
       city=city,
@@ -41,8 +41,8 @@ class GatewayService():
     return LibraryPaginationResponse(
       page=page,
       pageSize=size,
-      totalElements=libraries_json["totalElements"],
-      items=libraries_json["items"],
+      totalElements=libraries.totalElements,
+      items=libraries.items,
     )
   
 
@@ -53,27 +53,23 @@ class GatewayService():
       page: int = 1,
       size: int = 100,
   ):
-    library_books_json = await self._libraryCRUD.get_all_library_books(
+    library_books = await self._libraryCRUD.get_all_library_books(
       page=page,
       size=size,
     )
 
-    library_books: list[LibraryBookEntityResponse] = library_books_json["items"]
-
     library_book_items: list[LibraryBookResponse] = []
     for library_book in library_books:
-      print(f"\n\n\n{library_book['library']['library_uid']}\n\n\n")
-
-      if library_book["library"]["library_uid"] == str(library_uid):
-        if int(library_book["available_count"]) != 0 or show_all == True:
+      if library_book.library.libraryUid == library_uid:
+        if library_book.availableCount != 0 or show_all == True:
           library_book_items.append(
             LibraryBookResponse(
-              name=library_book["book"]["name"],
-              author=library_book["book"]["author"],
-              genre=library_book["book"]["genre"],
-              condition=library_book["book"]["condition"],
-              bookUid=library_book["book"]["book_uid"],
-              availableCount=library_book["available_count"],
+              name=library_book.book.name,
+              author=library_book.book.author,
+              genre=library_book.book.genre,
+              condition=library_book.book.condition,
+              bookUid=library_book.book.bookUid,
+              availableCount=library_book.availableCount,
             )
           )
 

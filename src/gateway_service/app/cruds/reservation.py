@@ -30,7 +30,7 @@ class ReservationCRUD(BaseCRUD):
 
     reservation_json: list[Reservation] = response.json()
 
-    reservations = []
+    reservations: list[Reservation] = []
     for reservation in reservation_json:
       reservations.append(
         Reservation(

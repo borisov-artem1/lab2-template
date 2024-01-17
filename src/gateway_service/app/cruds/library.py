@@ -7,6 +7,8 @@ from utils.settings import get_settings
 from schemas.library import (
   LibraryResponse,
   BookResponse,
+  LibraryBookEntityResponse,
+  LibraryPaginationResponse,
 )
 
 
@@ -30,20 +32,66 @@ class LibraryCRUD(BaseCRUD):
     )
     self._check_status_code(response.status_code)
     
-    return response.json()
+    libraries_json = response.json()
+    libraries = libraries_json["items"]
+
+    library_items: list[LibraryResponse] = []
+    for library in libraries:
+      library_items.append(
+        LibraryResponse(
+          libraryUid=library["library_uid"],
+          name=library["name"],
+          address=library["address"],
+          city=library["city"],
+        )
+      )
+
+    return LibraryPaginationResponse(
+      page=page,
+      pageSize=size,
+      totalElements=libraries_json["totalElements"],
+      items=library_items,
+    )
   
 
   async def get_all_library_books(
       self,
       page: int = 1,
       size: int = 100,
-  ):
+  ) -> list[LibraryBookEntityResponse]:
     response: Response = requests.get(
       url=f'{self.http_path}library_book/?page={page}&size={size}'
     )
     self._check_status_code(response.status_code)
 
-    return response.json()
+    library_books_json = response.json()
+    library_books = library_books_json["items"]
+
+    library_book_items: list[LibraryBookEntityResponse] = []
+    for library_book in library_books:
+      library_book_items.append(
+        LibraryBookEntityResponse(
+          id=library_book["id"],
+          libraryId=library_book["library_id"],
+          bookId=library_book["book_id"],
+          availableCount=library_book["available_count"],
+          library=LibraryResponse(
+            libraryUid=library_book["library"]["library_uid"],
+            name=library_book["library"]["name"],
+            address=library_book["library"]["address"],
+            city=library_book["library"]["city"],
+          ),
+          book=BookResponse(
+            bookUid=library_book["book"]["book_uid"],
+            name=library_book["book"]["name"],
+            author=library_book["book"]["author"],
+            genre=library_book["book"]["genre"],
+            condition=library_book["book"]["condition"],
+          )
+        )
+      )
+
+    return library_book_items
   
 
   async def get_library_by_uid(

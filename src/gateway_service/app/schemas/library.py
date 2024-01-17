@@ -61,7 +61,7 @@ class BookPaginationResponse(BaseModel):
 class LibraryBookEntityBase(BaseModel):
   libraryId: int
   bookId: int
-  available_count: int
+  availableCount: int
 
 
 class LibraryBookEntity(LibraryBookEntityBase):
