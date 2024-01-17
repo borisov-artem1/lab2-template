@@ -7,37 +7,8 @@ class RespEnum(Enum):
     GetAllLibraries = {
         "description": "Все библиотеки в городе",
     }
-    GetAllTickets = {
-        "description": "Информация по всем билетам пользователя",
-    }
-    GetTicket = {
-        "description": "Информация по конкретному билету",
-    }
-    BuyTicket = {
-        "description": "Информация о купленном билете",
-    }
-    TicketRefund = {
-        "description": "Возврат билета успешно выполнен",
-        "content": {
-            "application/octet-stream": {
-                "example": ""
-            }
-        },
-    }
-    GetMe = {
-        "description": "Полная информация о пользователе",
-    }
-    GetPrivilege = {
-        "description": "Данные о бонусном счете",
-    }
-
-    FlightNumberNotFound = {
-        "model": ErrorResponse,
-        "description": "Рейс с таким номером не найден",
-    }
-    TicketNotFound = {
-        "model": ErrorResponse,
-        "description": "Билет не найден",
+    GetAllBooksInLibrary = {
+        "description": "Все кники в библиотеке по uid",
     }
     InvalidData = {
         "model": ValidationErrorResponse,

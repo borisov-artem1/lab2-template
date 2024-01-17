@@ -38,7 +38,7 @@ class BookResponse(BookBase):
   book_uid: UUID
 
 
-class LibraryPaginationResponse(BaseModel):
+class BookPaginationResponse(BaseModel):
   page: conint(ge=1)
   pageSize: conint(ge=1)
   totalElements: conint(ge=0)

@@ -29,11 +29,8 @@ class LibraryBookService():
       offset=(page - 1) * size,
       limit=size,
     )
-
-    print("\n\n\n")
     library_book_items: list[LibraryBookResponse] = []
     for library_book in library_books:
-      print(library_book.library, library_book.book)
       library_model: LibraryModel = library_book.library
       book_model: BookModel = library_book.book
 
@@ -51,8 +48,6 @@ class LibraryBookService():
         condition=book_model.condition,
         book_uid=book_model.book_uid,
       )
-
-      print(library, book)
 
       library_book_items.append(
         LibraryBookResponse(

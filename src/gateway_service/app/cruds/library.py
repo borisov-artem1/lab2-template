@@ -27,3 +27,15 @@ class LibraryCRUD(BaseCRUD):
     
     return response.json()
   
+  async def get_all_library_books(
+      self,
+      page: int = 1,
+      size: int = 100,
+  ):
+    response: Response = requests.get(
+      url=f'{self.http_path}library_book/?page={page}&size={size}'
+    )
+    self._check_status_code(response.status_code)
+
+    return response.json()
+  
