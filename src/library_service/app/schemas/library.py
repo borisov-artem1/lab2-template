@@ -1,4 +1,5 @@
-from pydantic import BaseModel, constr
+from typing import List
+from pydantic import BaseModel, conint, constr
 from uuid import UUID
 
 
@@ -29,3 +30,14 @@ class LibraryCreate(LibraryBase):
 class Library(LibraryBase):
     id: int
     library_uid: UUID
+
+
+class LibraryResponse(LibraryBase):
+  library_uid: UUID
+
+
+class LibraryPaginationResponse(BaseModel):
+  page: conint(ge=1)
+  pageSize: conint(ge=1)
+  totalElements: conint(ge=0)
+  items: list[LibraryResponse]

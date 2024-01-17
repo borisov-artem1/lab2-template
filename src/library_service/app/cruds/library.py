@@ -14,10 +14,12 @@ class LibraryCRUD():
       filter: LibraryFilter,
       offset: int = 0,
       limit: int = 100,
-  ) -> list[LibraryModel]:
+  ) -> [list[LibraryModel], int]:
     libs = self._db.query(LibraryModel)
     libs = await self.__filter_libraries(libs, filter)
-    return libs.offset(offset).limit(limit).all()
+    total = libs.count()
+
+    return libs.offset(offset).limit(limit).all(), total
   
   async def get_by_uid(self, uid: UUID) -> LibraryModel | None:
     return self._db.query(LibraryModel).filter(LibraryModel.library_uid == uid).first()
@@ -58,12 +60,12 @@ class LibraryCRUD():
       filter: LibraryFilter
     ) -> Query[LibraryModel]:
     if filter.address:
-      libraries.filter(LibraryModel.address == filter.address)
+      libraries = libraries.filter(LibraryModel.address == filter.address)
 
     if filter.city:
-      libraries.filter(LibraryModel.city == filter.city)
+      libraries = libraries.filter(LibraryModel.city == filter.city)
 
     if filter.name:
-      libraries.filter(LibraryModel.name == filter.name)
+      libraries = libraries.filter(LibraryModel.name == filter.name)
 
     return libraries

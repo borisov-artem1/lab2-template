@@ -22,20 +22,9 @@ class GatewayService():
       city=city,
     )
 
-    libraries = []
-    for lib_dict in libraries_json:
-      libraries.append(
-        LibraryResponse(
-          name=lib_dict["name"],
-          city=lib_dict["city"],
-          address=lib_dict["address"],
-          library_uid=lib_dict["library_uid"],
-        )
-      )
-
     return LibraryPaginationResponse(
       page=page,
-      size=size,
-      totalElemnts=len(libraries),
-      items=libraries,
+      pageSize=size,
+      totalElements=libraries_json["totalElements"],
+      items=libraries_json["items"],
     )

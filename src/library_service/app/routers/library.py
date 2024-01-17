@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from cruds.library import LibraryCRUD
 from enums.responses import RespLibraryEnum
-from schemas.library import Library, LibraryFilter, LibraryCreate, LibraryUpdate
+from schemas.library import Library, LibraryFilter, LibraryCreate, LibraryUpdate, LibraryPaginationResponse
 from utils.database import get_db
 from services.library import LibraryService
 
@@ -26,7 +26,7 @@ router = APIRouter(
 @router.get(
   "/",
   status_code=status.HTTP_200_OK,
-  response_model=list[Library],
+  response_model=LibraryPaginationResponse,
   responses={
     status.HTTP_200_OK: RespLibraryEnum.GetAll.value,
   }

@@ -18,8 +18,8 @@ services:
       - default
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 15s
-      timeout: 15s
+      interval: 10s
+      timeout: 5s
       retries: 10
 
   library_service:
@@ -64,6 +64,16 @@ services:
       postgres_db:
         condition: service_healthy
 
+  gateway_service:
+    image: gateway_service
+    container_name: gateway_service
+    build:
+      context: "."
+      dockerfile: ./docker/gateway.Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - default
 
 
 volumes:

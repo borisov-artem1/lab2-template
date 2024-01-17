@@ -14,9 +14,11 @@ class LibraryBookCRUD():
       offset: int = 0,
       limit: int = 100,
   ) -> list[LibraryBookModel]:
-    library_books = self._db.query(LibraryBookModel)
+    library_books = self._db.query(LibraryBookModel).join(LibraryBookModel.book).join(LibraryBookModel.library)
     library_books = await self.__filter_library_books(library_books, filter)
-    return library_books.offset(offset).limit(limit).all()
+    total = library_books.count()
+
+    return library_books.offset(offset).limit(limit).all(), total
   
   async def get_by_id(self, id: int) -> LibraryBookModel | None:
     return self._db.query(LibraryBookModel).filter(LibraryBookModel.id == id).first()
@@ -57,12 +59,12 @@ class LibraryBookCRUD():
       filter: LibraryBookFilter
     ) -> Query[LibraryBookModel]:
     if filter.book_id:
-      library_books.filter(LibraryBookModel.book_id == filter.book_id)
+      library_books = library_books.filter(LibraryBookModel.book_id == filter.book_id)
 
     if filter.library_id:
-      library_books.filter(LibraryBookModel.library_id == filter.library_id)
+      library_books = library_books.filter(LibraryBookModel.library_id == filter.library_id)
 
     if filter.available_count:
-      library_books.filter(LibraryBookModel.available_count == filter.available_count)
+      library_books = library_books.filter(LibraryBookModel.available_count == filter.available_count)
 
     return library_books

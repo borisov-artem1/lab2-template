@@ -1,4 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy.orm import relationship
 
 from models.book import BookModel
 from models.library import LibraryModel
@@ -13,3 +14,6 @@ class LibraryBookModel(Base):
   book_id         = Column(Integer, ForeignKey(BookModel.id))
   library_id      = Column(Integer, ForeignKey(LibraryModel.id))
   available_count = Column(Integer, nullable=False)
+  
+  book            = relationship(BookModel, foreign_keys=[book_id])
+  library         = relationship(LibraryModel, foreign_keys=[library_id])

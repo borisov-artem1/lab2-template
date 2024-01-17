@@ -26,3 +26,4 @@ class LibraryCRUD(BaseCRUD):
     self._check_status_code(response.status_code)
     
     return response.json()
+  

@@ -38,10 +38,10 @@ class LibraryResponse(LibraryBase):
   library_uid: UUID
 
 
-class LibraryPaginationResponse():
+class LibraryPaginationResponse(BaseModel):
   page: int
   pageSize: int
-  totalElemnts: int
+  totalElements: int
   items: list[LibraryResponse]
 
 

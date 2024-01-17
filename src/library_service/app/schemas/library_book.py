@@ -1,4 +1,6 @@
 from pydantic import BaseModel, conint
+from schemas.book import BookResponse
+from schemas.library import LibraryResponse
 
 
 class LibraryBookBase(BaseModel):
@@ -25,3 +27,16 @@ class LibraryBookCreate(LibraryBookBase):
 
 class LibraryBook(LibraryBookBase):
     id: int
+
+
+class LibraryBookResponse(LibraryBookBase):
+    id: int
+    library: LibraryResponse
+    book: BookResponse
+
+
+class LibraryBookPaginationResponse(BaseModel):
+  page: conint(ge=1)
+  pageSize: conint(ge=1)
+  totalElements: conint(ge=0)
+  items: list[LibraryBookResponse]

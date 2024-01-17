@@ -39,6 +39,6 @@ services:
     port: 8080
     log_level: "info"
     reload: True
-    library_host:  library_service
+    library_host: library_service
     rating_host: rating_service
     reservation_host: reservation_service

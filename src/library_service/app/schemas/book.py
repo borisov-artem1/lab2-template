@@ -32,3 +32,14 @@ class BookCreate(BookBase):
 class Book(BookBase):
     id: int
     book_uid: UUID
+
+
+class BookResponse(BookBase):
+  book_uid: UUID
+
+
+class LibraryPaginationResponse(BaseModel):
+  page: conint(ge=1)
+  pageSize: conint(ge=1)
+  totalElements: conint(ge=0)
+  items: list[BookResponse]

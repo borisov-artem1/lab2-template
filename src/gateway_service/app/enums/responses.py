@@ -4,8 +4,8 @@ from schemas.response import ErrorResponse, ValidationErrorResponse
 
 
 class RespEnum(Enum):
-    GetAllFlights = {
-        "description": "Список рейсов",
+    GetAllLibraries = {
+        "description": "Все библиотеки в городе",
     }
     GetAllTickets = {
         "description": "Информация по всем билетам пользователя",
