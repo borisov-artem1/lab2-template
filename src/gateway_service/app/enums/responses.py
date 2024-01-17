@@ -10,6 +10,9 @@ class RespEnum(Enum):
     GetAllBooksInLibrary = {
         "description": "Все кники в библиотеке по uid",
     }
+    GetUserRentedBooks = {
+        "description": "Все взятые пользователем книги",
+    }
     InvalidData = {
         "model": ValidationErrorResponse,
         "description": "Ошибка валидации данных",

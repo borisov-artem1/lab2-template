@@ -7,8 +7,8 @@ from enums.status import ReservationStatus
 
 class ReservationBase(BaseModel):
     username: constr(max_length=80)
-    book_uid: UUID
     library_uid: UUID
+    book_uid: UUID
     status: ReservationStatus
     start_date: dt
     till_date: dt
@@ -16,8 +16,8 @@ class ReservationBase(BaseModel):
 
 class ReservationFilter(BaseModel):
     username: constr(max_length=80) | None = None
-    book_uid: UUID | None = None
     library_uid: UUID | None = None
+    book_uid: UUID | None = None
     status: ReservationStatus | None = None
     start_date: dt | None = None
     till_date: dt | None = None
@@ -25,8 +25,8 @@ class ReservationFilter(BaseModel):
 
 class ReservationUpdate(BaseModel):
     username: constr(max_length=80) | None = None
-    book_uid: UUID | None = None
     library_uid: UUID | None = None
+    book_uid: UUID | None = None
     status: ReservationStatus | None = None
     start_date: dt | None = None
     till_date: dt | None = None

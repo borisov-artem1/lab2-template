@@ -58,21 +58,21 @@ class ReservationCRUD():
       filter: ReservationFilter
     ) -> Query[ReservationModel]:
     if filter.username:
-      reservations.filter(ReservationModel.username == filter.username)
+      reservations = reservations.filter(ReservationModel.username == filter.username)
 
     if filter.book_uid:
-      reservations.filter(ReservationModel.book_uid == filter.book_uid)
+      reservations = reservations.filter(ReservationModel.book_uid == filter.book_uid)
     
     if filter.library_uid:
-      reservations.filter(ReservationModel.library_uid == filter.library_uid)
+      reservations = reservations.filter(ReservationModel.library_uid == filter.library_uid)
 
     if filter.status:
-      reservations.filter(ReservationModel.status == filter.status)
+      reservations = reservations.filter(ReservationModel.status == filter.status)
 
     if filter.start_date:
-      reservations.filter(ReservationModel.start_date == filter.start_date)
+      reservations = reservations.filter(ReservationModel.start_date == filter.start_date)
 
     if filter.till_date:
-      reservations.filter(ReservationModel.till_date == filter.till_date)
+      reservations = reservations.filter(ReservationModel.till_date == filter.till_date)
 
     return reservations

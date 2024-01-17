@@ -23,7 +23,7 @@ class Library(LibraryBase):
 
 
 class LibraryResponse(LibraryBase):
-  library_uid: UUID
+  libraryUid: UUID
 
 
 class LibraryPaginationResponse(BaseModel):
@@ -43,11 +43,11 @@ class BookBase(BaseModel):
 
 class Book(BookBase):
   id: int
-  book_uid: UUID
+  bookUid: UUID
 
 
 class BookResponse(BookBase):
-  book_uid: UUID
+  bookUid: UUID
 
 
 class BookPaginationResponse(BaseModel):
@@ -59,8 +59,8 @@ class BookPaginationResponse(BaseModel):
 
 # ===== LibraryBookEntity =====
 class LibraryBookEntityBase(BaseModel):
-  library_id: int
-  book_id: int
+  libraryId: int
+  bookId: int
   available_count: int
 
 

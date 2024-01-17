@@ -41,7 +41,7 @@ def custom_openapi():
 create_tables()
 
 app = FastAPI(
-    title="Rating Service",
+    title="Reservation Service",
     version="v1",
 )
 app.include_router(api_router, prefix="/api/v1")

@@ -5,16 +5,23 @@ from uuid import UUID
 
 
 from cruds.library import LibraryCRUD
+from cruds.reservation import ReservationCRUD 
 from enums.responses import RespEnum
 from schemas.library import (
   LibraryPaginationResponse,
   LibraryBookPaginationResponse,
-  )
+)
+from schemas.reservation import (
+  BookReservationResponse,
+)
 from services.gateway import GatewayService
 
 
 def get_library_crud() -> LibraryCRUD:
   return LibraryCRUD
+
+def get_reservation_crud() -> ReservationCRUD:
+  return ReservationCRUD
 
 
 router = APIRouter(
@@ -35,12 +42,14 @@ router = APIRouter(
 )
 async def get_list_of_libraries(
     libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
+    reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
     city: Annotated[str, Query(max_length=80)],
     page: Annotated[int, Query(ge=1)] = 1,
     size: Annotated[int, Query(ge=1)] = 100,
   ):
   return await GatewayService(
-      libraryCRUD=libraryCRUD
+      libraryCRUD=libraryCRUD,
+      reservationCRUD=reservationCRUD,
     ).get_all_libraries_in_city(
       city=city,
       page=page,
@@ -58,13 +67,15 @@ async def get_list_of_libraries(
 )
 async def get_books_in_library(
     libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
+    reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
     libraryUid: UUID,
     showAll: bool = False,
     page: Annotated[int, Query(ge=1)] = 1,
     size: Annotated[int, Query(ge=1)] = 100,
   ):
   return await GatewayService(
-      libraryCRUD=libraryCRUD
+      libraryCRUD=libraryCRUD,
+      reservationCRUD=reservationCRUD,
     ).get_books_in_library(
       library_uid=libraryUid,
       show_all=showAll,
@@ -72,3 +83,27 @@ async def get_books_in_library(
       size=size
     )
 
+
+@router.get(
+  "/reservations",
+  status_code=status.HTTP_200_OK,
+  response_model=list[BookReservationResponse],
+  responses={
+    status.HTTP_200_OK: RespEnum.GetUserRentedBooks.value,
+  }
+)
+async def get_books_in_library(
+    libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
+    reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
+    X_User_Name: Annotated[str, Header(max_length=80)],
+    page: Annotated[int, Query(ge=1)] = 1,
+    size: Annotated[int, Query(ge=1)] = 100,
+  ):
+  return await GatewayService(
+      libraryCRUD=libraryCRUD,
+      reservationCRUD=reservationCRUD,
+    ).get_user_rented_books(
+      X_User_Name=X_User_Name,
+      page=page,
+      size=size
+    )
