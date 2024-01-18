@@ -1,5 +1,5 @@
 from pydantic import BaseModel, conint
-from schemas.book import BookResponse
+from schemas.book import BookInfo
 from schemas.library import LibraryResponse
 
 
@@ -32,7 +32,7 @@ class LibraryBook(LibraryBookBase):
 class LibraryBookResponse(LibraryBookBase):
     id: int
     library: LibraryResponse
-    book: BookResponse
+    book: BookInfo
 
 
 class LibraryBookPaginationResponse(BaseModel):

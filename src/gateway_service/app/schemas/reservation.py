@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import UUID
 
 from enums.status import ReservationStatus, ConditionStatus
-from schemas.library import LibraryResponse, BookResponse
+from schemas.library import LibraryResponse, BookInfo
 from schemas.rating import UserRatingResponse
 
 
@@ -63,7 +63,7 @@ class BookReservationResponse(BaseModel):
   startDate: datetime
   tillDate: datetime
   library: LibraryResponse
-  book: BookResponse
+  book: BookInfo
 
   class Config:
     json_encoders = {
@@ -88,7 +88,7 @@ class TakeBookResponse(BaseModel):
   startDate: datetime
   tillDate: datetime
   library: LibraryResponse
-  book: BookResponse
+  book: BookInfo
   rating: UserRatingResponse
 
   class Config:

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from cruds.library_book import LibraryBookCRUD
 from schemas.library_book import LibraryBookFilter, LibraryBookUpdate, LibraryBookCreate, LibraryBookPaginationResponse, LibraryBookResponse
 from schemas.library import LibraryResponse
-from schemas.book import BookResponse
+from schemas.book import BookInfo
 
 from exceptions.http import NotFoundException, ConflictException
 from models.library_book import LibraryBookModel
@@ -41,7 +41,7 @@ class LibraryBookService():
         library_uid=library_model.library_uid
       )
 
-      book: BookResponse = BookResponse(
+      book: BookInfo = BookInfo(
         name=book_model.name,
         author=book_model.author,
         genre=book_model.genre,

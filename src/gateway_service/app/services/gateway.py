@@ -8,7 +8,7 @@ from cruds.rating import RatingCRUD
 from schemas.library import (
   LibraryResponse,
   LibraryPaginationResponse,
-  BookResponse,
+  BookInfo,
   LibraryBookEntityResponse,
   LibraryBookResponse,
   LibraryBookPaginationResponse,
@@ -114,7 +114,7 @@ class GatewayService():
     book_reservations: list[BookReservationResponse] = []
     for reservation in reservations:
       library: LibraryResponse = await self._libraryCRUD.get_library_by_uid(reservation.libraryUid)
-      book: BookResponse = await self._libraryCRUD.get_book_by_uid(reservation.bookUid)
+      book: BookInfo = await self._libraryCRUD.get_book_by_uid(reservation.bookUid)
 
       book_reservations.append(
         BookReservationResponse(
@@ -211,7 +211,7 @@ class GatewayService():
       uid=reservation_uid
     )
     if not reservation:
-      raise NotFoundException(prefix="return_book")
+      raise NotFoundException(prefix="return_book", message="Бронирование не найдено")
     
     status_return = await self.__change_reservation_info(
       reservation=reservation,

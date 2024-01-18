@@ -22,6 +22,11 @@ class RespEnum(Enum):
     ReturnBook = {
         "description": "Вернуть книгу",
     }
+
+    ReservationNotFound = {
+        "model": ErrorResponse,
+        "description": "Бронирование не найдено",
+    }
     InvalidData = {
         "model": ValidationErrorResponse,
         "description": "Ошибка валидации данных",

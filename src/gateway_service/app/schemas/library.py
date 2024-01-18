@@ -53,7 +53,7 @@ class Book(BookBase):
   bookUid: UUID
 
 
-class BookResponse(BookBase):
+class BookInfo(BookBase):
   bookUid: UUID
 
 
@@ -61,7 +61,7 @@ class BookPaginationResponse(BaseModel):
   page: conint(ge=1)
   pageSize: conint(ge=1)
   totalElements: conint(ge=0)
-  items: list[BookResponse]
+  items: list[BookInfo]
 
 
 # ===== LibraryBookEntity =====
@@ -84,7 +84,7 @@ class LibraryBookEntity(LibraryBookEntityBase):
 class LibraryBookEntityResponse(LibraryBookEntityBase):
   id: int
   library: LibraryResponse
-  book: BookResponse
+  book: BookInfo
 
 
 

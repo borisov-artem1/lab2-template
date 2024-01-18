@@ -7,7 +7,7 @@ from cruds.base import BaseCRUD
 from utils.settings import get_settings
 from schemas.library import (
   LibraryResponse,
-  BookResponse,
+  BookInfo,
   LibraryBookEntityResponse,
   LibraryPaginationResponse,
   LibraryBookUpdate,
@@ -84,7 +84,7 @@ class LibraryCRUD(BaseCRUD):
             address=library_book["library"]["address"],
             city=library_book["library"]["city"],
           ),
-          book=BookResponse(
+          book=BookInfo(
             bookUid=library_book["book"]["book_uid"],
             name=library_book["book"]["name"],
             author=library_book["book"]["author"],
@@ -119,7 +119,7 @@ class LibraryCRUD(BaseCRUD):
   async def get_book_by_uid(
       self,
       uid: UUID,
-  ) -> BookResponse:
+  ) -> BookInfo:
     response: Response = requests.get(
       url=f'{self.http_path}book/{uid}',
     )
@@ -127,7 +127,7 @@ class LibraryCRUD(BaseCRUD):
 
     book_json = response.json()
 
-    return BookResponse(
+    return BookInfo(
       bookUid=book_json["book_uid"],
       name=book_json["name"],
       author=book_json["author"],

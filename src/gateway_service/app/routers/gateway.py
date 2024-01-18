@@ -106,7 +106,7 @@ async def get_books_in_library(
     status.HTTP_200_OK: RespEnum.GetUserRentedBooks.value,
   }
 )
-async def get_books_in_library(
+async def get_user_rented_books(
     libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
     reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
     ratingCRUD: Annotated[RatingCRUD, Depends(get_rating_crud)],
@@ -179,9 +179,10 @@ async def take_book(
   response_model=None,
   responses={
     status.HTTP_204_NO_CONTENT: RespEnum.ReturnBook.value,
+    status.HTTP_404_NOT_FOUND: RespEnum.ReservationNotFound.value,
   }
 )
-async def take_book(
+async def return_book(
     libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
     reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
     ratingCRUD: Annotated[RatingCRUD, Depends(get_rating_crud)],
