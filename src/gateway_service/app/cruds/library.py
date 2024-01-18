@@ -11,6 +11,7 @@ from schemas.library import (
   LibraryBookEntityResponse,
   LibraryPaginationResponse,
   LibraryBookUpdate,
+  BookUpdate,
 )
 
 
@@ -142,10 +143,25 @@ class LibraryCRUD(BaseCRUD):
   ):
     response: Response = requests.get(
       url=f'{self.http_path}library_book/{id}',
-      data=json.dumps(update.model_dump())
+      data=json.dumps(update.model_dump(exclude_unset=True))
     )
     self._check_status_code(response.status_code)
 
     library_book = response.json()
     return library_book["id"]
+  
+
+  async def patch_book(
+      self,
+      uid: UUID,
+      update: BookUpdate,
+  ):
+    response: Response = requests.get(
+      url=f'{self.http_path}book/{uid}',
+      data=json.dumps(update.model_dump(exclude_unset=True))
+    )
+    self._check_status_code(response.status_code)
+
+    book = response.json()
+    return book["book_uid"]
   

@@ -6,6 +6,11 @@ class RatingBase(BaseModel):
   stars: conint(ge=1, le=100)
 
 
+class RatingUpdate(BaseModel):
+  username: constr(max_length=80) | None = None
+  stars: conint(ge=1, le=100) | None = None
+
+
 class Rating(RatingBase):
   id: int
 

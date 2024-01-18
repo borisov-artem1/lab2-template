@@ -2,7 +2,7 @@ from pydantic import BaseModel, constr, conint, validator
 from datetime import datetime
 from uuid import UUID
 
-from enums.status import ReservationStatus
+from enums.status import ReservationStatus, ConditionStatus
 from schemas.library import LibraryResponse, BookResponse
 from schemas.rating import UserRatingResponse
 
@@ -40,6 +40,20 @@ class ReservationCreate(BaseModel):
   @validator("start_date", "till_date", pre=True)
   def datetime_validate(cls, dt):
     return datetime.fromisoformat(dt)
+  
+
+class ReservationUpdate(BaseModel):
+  username: constr(max_length=80) | None = None
+  library_uid: UUID | None = None
+  book_uid: UUID | None = None
+  status: ReservationStatus | None = None
+  start_date: datetime | None = None
+  till_date: datetime | None = None
+
+  @validator("start_date", "till_date", pre=True)
+  def datetime_validate(cls, dt):
+    if dt:
+      return datetime.fromisoformat(dt)
 
 
 class BookReservationResponse(BaseModel):
@@ -81,3 +95,13 @@ class TakeBookResponse(BaseModel):
     json_encoders = {
       datetime: convert_datetime_to_iso_8601
     }
+
+
+class ReturnBookRequest(BaseModel):
+  condition: ConditionStatus
+  date: datetime
+
+  @validator("date", pre=True)
+  def datetime_validate(cls, dt):
+    if dt:
+      return datetime.fromisoformat(dt)

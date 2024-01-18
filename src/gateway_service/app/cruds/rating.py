@@ -1,10 +1,11 @@
+import json
 from uuid import UUID
 import requests
 from requests import Response
 
 from cruds.base import BaseCRUD
 from utils.settings import get_settings
-from schemas.rating import Rating
+from schemas.rating import Rating, RatingUpdate
 
 
 class RatingCRUD(BaseCRUD):
@@ -40,3 +41,18 @@ class RatingCRUD(BaseCRUD):
       )
     
     return ratings
+  
+
+  async def patch_rating(
+      self,
+      id: int,
+      update: RatingUpdate,
+  ):
+    response: Response = requests.patch(
+      url=f'{self.http_path}rating/{id}',
+      data=json.dumps(update.model_dump(exclude_unset=True))
+    )
+    self._check_status_code(response.status_code)
+
+    rating = response.json()
+    return rating["id"]

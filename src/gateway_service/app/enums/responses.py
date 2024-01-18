@@ -19,6 +19,9 @@ class RespEnum(Enum):
     TakeBook = {
         "description": "Взять книгу",
     }
+    ReturnBook = {
+        "description": "Вернуть книгу",
+    }
     InvalidData = {
         "model": ValidationErrorResponse,
         "description": "Ошибка валидации данных",

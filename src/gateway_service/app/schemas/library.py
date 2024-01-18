@@ -41,6 +41,13 @@ class BookBase(BaseModel):
   condition: ConditionStatus
 
 
+class BookUpdate(BaseModel):
+  name: constr(max_length=255) | None = None
+  author: constr(max_length=255) | None = None
+  genre: constr(max_length=255) | None = None
+  condition: ConditionStatus | None = None
+
+
 class Book(BookBase):
   id: int
   bookUid: UUID

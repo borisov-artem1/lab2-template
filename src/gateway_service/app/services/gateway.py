@@ -13,6 +13,7 @@ from schemas.library import (
   LibraryBookResponse,
   LibraryBookPaginationResponse,
   LibraryBookUpdate,
+  BookUpdate,
 )
 from schemas.reservation import (
   Reservation,
@@ -20,10 +21,13 @@ from schemas.reservation import (
   TakeBookRequest,
   ReservationCreate,
   TakeBookResponse,
+  ReturnBookRequest,
+  ReservationUpdate,
 )
 from schemas.rating import (
   Rating,
   UserRatingResponse,
+  RatingUpdate,
 )
 from enums.status import ReservationStatus, ConditionStatus
 from exceptions.http import BadRequestException, NotFoundException
@@ -131,20 +135,13 @@ class GatewayService():
       self,
       X_User_Name: str,
   ):
-    ratings: list[Rating] = await self._ratingCRUD.get_all_ratings(
-      username=X_User_Name,
+    rating = await self.__get_rating_by_username(
+      username=X_User_Name
     )
-    
-    if ratings:
-      if len(ratings) > 1:
-        raise BadRequestException(prefix="get_user_rating")
-    
-      return UserRatingResponse(
-        stars=ratings[0].stars,
-      )
-    else:
-      raise NotFoundException(prefix="get_user_rating")
-    
+    return UserRatingResponse(
+      stars= rating.stars,
+    )
+  
 
   async def take_book(
       self,
@@ -202,7 +199,114 @@ class GatewayService():
       book=library_book.book,
       rating=user_rating,
     )
+  
 
+  async def return_book(
+    self,
+    X_User_Name: str,
+    reservation_uid: UUID,
+    return_book_request: ReturnBookRequest,
+  ):
+    reservation: Reservation = await self._reservationCRUD.get_reservation_by_uid(
+      uid=reservation_uid
+    )
+    if not reservation:
+      raise NotFoundException(prefix="return_book")
+    
+    status_return = await self.__change_reservation_info(
+      reservation=reservation,
+      return_book_request=return_book_request
+    )
+
+    book = await self._libraryCRUD.get_book_by_uid(
+      uid=reservation.bookUid,
+    )
+
+    await self._libraryCRUD.patch_book( # upd book condition
+      uid=reservation.bookUid,
+      update=BookUpdate(
+        condition=return_book_request.condition,
+      )
+    )
+
+    library_book = await self.__get_book_in_library( # find library_book info
+      libraryUid=reservation.libraryUid,
+      bookUid=reservation.bookUid,
+    )
+    
+    await self._libraryCRUD.patch_library_book( # inc available count
+      id=library_book.id,
+      update=LibraryBookUpdate(
+        available_count=library_book.availableCount + 1,
+      ),
+    )
+
+    await self.__change_user_rating(
+      X_User_Name=X_User_Name,
+      status_return=status_return,
+      updated_condition=return_book_request.condition,
+      book_condtiton=book.condition,
+    )
+
+    return None
+
+
+  async def __change_user_rating(
+      self,
+      X_User_Name: str,
+      status_return: ReservationStatus,
+      updated_condition: ConditionStatus,
+      book_condtiton: ConditionStatus,
+  ) -> None:
+    rating = await self.__get_rating_by_username(
+      username=X_User_Name,
+    )
+
+    stars = rating.stars
+    okFlag = True
+
+    if (status_return == ReservationStatus.EXPIRED):
+      stars -= 10
+      okFlag = False
+    
+    if (book_condtiton != updated_condition):
+      stars -= 10
+      okFlag = False
+
+    if (okFlag):
+      stars += 1
+
+    if (stars < 1):
+      stars = 0
+    elif (stars > 100):
+      stars = 100
+
+    await self._ratingCRUD.patch_rating(
+      id=rating.id,
+      update=RatingUpdate(
+        stars=stars,
+      )
+    )
+    
+
+  async def __change_reservation_info(
+      self,
+      reservation: Reservation,
+      return_book_request: ReturnBookRequest,
+  ) -> ReservationStatus:
+    status_return = ReservationStatus.RETURNED \
+      if return_book_request.date <= reservation.tillDate \
+      else ReservationStatus.EXPIRED
+    
+    await self._reservationCRUD.patch_reservation(
+      uid=reservation.reservationUid,
+      update=ReservationUpdate(
+        status=status_return,
+      )
+    )
+
+    return status_return
+    
 
   async def __get_book_in_library(
       self,
@@ -226,3 +330,20 @@ class GatewayService():
       raise NotFoundException(prefix="__get_book_in_library")
     else:
       return library_book_items[0]
+    
+
+  async def __get_rating_by_username(
+      self,
+      username: str,
+  ) -> Rating:
+    ratings: list[Rating] = await self._ratingCRUD.get_all_ratings(
+      username=username,
+    )
+    
+    if ratings:
+      if len(ratings) > 1:
+        raise BadRequestException(prefix="get_rating_by_username")
+    
+      return ratings[0]
+    else:
+      raise NotFoundException(prefix="get_rating_by_username")
