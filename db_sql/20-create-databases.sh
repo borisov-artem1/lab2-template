@@ -5,5 +5,5 @@ set -e
 export VARIANT="v4"
 export SCRIPT_PATH=/docker-entrypoint-initdb.d/
 export PGPASSWORD=password
-psql -f "$SCRIPT_PATH/scripts/db-$VARIANT.sql"
-psql -f "$SCRIPT_PATH/scripts/db/all.sql"
+psql -f "$SCRIPT_PATH/sql/db-$VARIANT.sql"
+psql -f "$SCRIPT_PATH/sql/db/all.sql"
