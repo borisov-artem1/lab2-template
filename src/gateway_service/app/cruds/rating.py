@@ -5,7 +5,7 @@ from requests import Response
 
 from cruds.base import BaseCRUD
 from utils.settings import get_settings
-from schemas.rating import Rating, RatingUpdate
+from schemas.rating import Rating, RatingUpdate, RatingCreate
 
 
 class RatingCRUD(BaseCRUD):
@@ -41,6 +41,40 @@ class RatingCRUD(BaseCRUD):
       )
     
     return ratings
+  
+
+  async def get_rating_by_id(
+      self,
+      id: int,
+  ) -> Rating:
+    response: Response = requests.get(
+      url=f'{self.http_path}rating/{id}',
+    )
+    self._check_status_code(response.status_code)
+
+    rating_json = response.json()
+
+    return Rating(
+      id=rating_json["id"],
+      username=rating_json["username"],
+      stars=rating_json["stars"],
+    )
+  
+
+  async def add_rating(
+      self,
+      create: RatingCreate,
+  ) -> int:
+    response: Response = requests.post(
+      url=f'{self.http_path}rating/',
+      data=json.dumps(create.model_dump())
+    )
+    self._check_status_code(response.status_code)
+
+    location: str = response.headers["location"]
+    id = str(location.split("/")[-1])
+
+    return id
   
 
   async def patch_rating(
