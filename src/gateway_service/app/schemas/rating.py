@@ -11,10 +11,6 @@ class RatingUpdate(BaseModel):
   stars: conint(ge=1, le=100) | None = None
 
 
-class RatingCreate(RatingBase):
-    pass
-
-
 class Rating(RatingBase):
   id: int
 

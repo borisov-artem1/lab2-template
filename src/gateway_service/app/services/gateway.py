@@ -28,7 +28,6 @@ from schemas.rating import (
   Rating,
   UserRatingResponse,
   RatingUpdate,
-  RatingCreate,
 )
 from enums.status import ReservationStatus, ConditionStatus
 from exceptions.http import BadRequestException, NotFoundException
@@ -347,13 +346,4 @@ class GatewayService():
     
       return ratings[0]
     else:
-      rating_id = await self._ratingCRUD.add_rating(RatingCreate(
-        username=username,
-        stars=50,
-      ))
-
-      rating = await self._ratingCRUD.get_rating_by_id(
-        id=rating_id,
-      )
-
-      return rating
+      raise NotFoundException(prefix="get_rating_by_username")
