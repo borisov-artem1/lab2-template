@@ -47,7 +47,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "src,docker,docker-compose.yml,config.yaml,requirements.txt"
+          source: "src,docker,postgres,scripts,docker-compose.yml,config.yaml,requirements.txt"
           target: /home/${{ secrets.SSH_USERNAME }}/library_system
 
       - name: Run app on VM
