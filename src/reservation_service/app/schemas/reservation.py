@@ -23,7 +23,6 @@ class ReservationBase(BaseModel):
     }
 
 
-
 class ReservationFilter(BaseModel):
   username: constr(max_length=80) | None = None
   library_uid: UUID | None = None

@@ -13,6 +13,9 @@ class RespEnum(Enum):
     GetUserRentedBooks = {
         "description": "Все взятые пользователем книги",
     }
+    GetUserRating = {
+        "description": "Рейтинг пользователя",
+    }
     InvalidData = {
         "model": ValidationErrorResponse,
         "description": "Ошибка валидации данных",

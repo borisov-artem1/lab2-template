@@ -57,9 +57,9 @@ class RatingCRUD():
       filter: RatingFilter
     ) -> Query[RatingModel]:
     if filter.username:
-      ratings.filter(RatingModel.username == filter.username)
+      ratings = ratings.filter(RatingModel.username == filter.username)
 
     if filter.stars:
-      ratings.filter(RatingModel.stars == filter.stars)
+      ratings = ratings.filter(RatingModel.stars == filter.stars)
 
     return ratings

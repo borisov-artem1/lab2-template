@@ -4,7 +4,6 @@ from requests import Response
 
 from cruds.base import BaseCRUD
 from utils.settings import get_settings
-
 from schemas.reservation import Reservation
 
 

@@ -6,6 +6,7 @@ from uuid import UUID
 
 from cruds.library import LibraryCRUD
 from cruds.reservation import ReservationCRUD 
+from cruds.rating import RatingCRUD
 from enums.responses import RespEnum
 from schemas.library import (
   LibraryPaginationResponse,
@@ -13,6 +14,9 @@ from schemas.library import (
 )
 from schemas.reservation import (
   BookReservationResponse,
+)
+from schemas.rating import (
+  UserRatingResponse,
 )
 from services.gateway import GatewayService
 
@@ -22,6 +26,9 @@ def get_library_crud() -> LibraryCRUD:
 
 def get_reservation_crud() -> ReservationCRUD:
   return ReservationCRUD
+
+def get_rating_crud() -> RatingCRUD:
+  return RatingCRUD
 
 
 router = APIRouter(
@@ -43,6 +50,7 @@ router = APIRouter(
 async def get_list_of_libraries(
     libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
     reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
+    ratingCRUD: Annotated[RatingCRUD, Depends(get_rating_crud)],
     city: Annotated[str, Query(max_length=80)],
     page: Annotated[int, Query(ge=1)] = 1,
     size: Annotated[int, Query(ge=1)] = 100,
@@ -50,6 +58,7 @@ async def get_list_of_libraries(
   return await GatewayService(
       libraryCRUD=libraryCRUD,
       reservationCRUD=reservationCRUD,
+      ratingCRUD=ratingCRUD,
     ).get_all_libraries_in_city(
       city=city,
       page=page,
@@ -68,6 +77,7 @@ async def get_list_of_libraries(
 async def get_books_in_library(
     libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
     reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
+    ratingCRUD: Annotated[RatingCRUD, Depends(get_rating_crud)],
     libraryUid: UUID,
     showAll: bool = False,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -76,6 +86,7 @@ async def get_books_in_library(
   return await GatewayService(
       libraryCRUD=libraryCRUD,
       reservationCRUD=reservationCRUD,
+      ratingCRUD=ratingCRUD,
     ).get_books_in_library(
       library_uid=libraryUid,
       show_all=showAll,
@@ -95,6 +106,7 @@ async def get_books_in_library(
 async def get_books_in_library(
     libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
     reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
+    ratingCRUD: Annotated[RatingCRUD, Depends(get_rating_crud)],
     X_User_Name: Annotated[str, Header(max_length=80)],
     page: Annotated[int, Query(ge=1)] = 1,
     size: Annotated[int, Query(ge=1)] = 100,
@@ -102,8 +114,32 @@ async def get_books_in_library(
   return await GatewayService(
       libraryCRUD=libraryCRUD,
       reservationCRUD=reservationCRUD,
+      ratingCRUD=ratingCRUD,
     ).get_user_rented_books(
       X_User_Name=X_User_Name,
       page=page,
       size=size
+    )
+
+
+@router.get(
+  "/rating",
+  status_code=status.HTTP_200_OK,
+  response_model=UserRatingResponse,
+  responses={
+    status.HTTP_200_OK: RespEnum.GetUserRating.value,
+  }
+)
+async def get_user_rating(
+    libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
+    reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
+    ratingCRUD: Annotated[RatingCRUD, Depends(get_rating_crud)],
+    X_User_Name: Annotated[str, Header(max_length=80)],
+  ):
+  return await GatewayService(
+      libraryCRUD=libraryCRUD,
+      reservationCRUD=reservationCRUD,
+      ratingCRUD=ratingCRUD,
+    ).get_user_rating(
+      X_User_Name=X_User_Name,
     )

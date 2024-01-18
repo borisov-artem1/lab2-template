@@ -1,6 +1,7 @@
 from uuid import UUID
 from cruds.library import LibraryCRUD
 from cruds.reservation import ReservationCRUD
+from cruds.rating import RatingCRUD
 
 from schemas.library import (
   LibraryResponse,
@@ -10,11 +11,15 @@ from schemas.library import (
   LibraryBookResponse,
   LibraryBookPaginationResponse
 )
-
 from schemas.reservation import (
   Reservation,
   BookReservationResponse,
 )
+from schemas.rating import (
+  Rating,
+  UserRatingResponse,
+)
+from exceptions.http import BadRequestException, NotFoundException
 
 
 class GatewayService():
@@ -22,9 +27,11 @@ class GatewayService():
       self,
       libraryCRUD: LibraryCRUD,
       reservationCRUD: ReservationCRUD,
+      ratingCRUD: RatingCRUD,
   ):
     self._libraryCRUD: LibraryCRUD = libraryCRUD()
     self._reservationCRUD: ReservationCRUD = reservationCRUD()
+    self._ratingCRUD: RatingCRUD = ratingCRUD()
 
   async def get_all_libraries_in_city(
       self,
@@ -111,4 +118,24 @@ class GatewayService():
       )
 
     return book_reservations
+  
+
+  async def get_user_rating(
+      self,
+      X_User_Name: str,
+  ):
+    ratings: list[Rating] = await self._ratingCRUD.get_all_ratings(
+      username=X_User_Name,
+    )
+    
+    if ratings:
+      if len(ratings) > 1:
+        raise BadRequestException(prefix="get_user_rating")
+    
+      return UserRatingResponse(
+        stars=ratings[0].stars,
+      )
+    else:
+      raise NotFoundException(prefix="get_user_rating")
+
 

@@ -1,6 +1,23 @@
 from fastapi import HTTPException, status
 
 
+class BadRequestException(HTTPException):
+  def __init__(
+    self,
+    prefix: str,
+    message: str | None = None,
+    headers: dict[str, str] | None = None
+  ) -> None:
+    if message == None:
+      message = "неверный набор данных"
+
+    super().__init__(
+      status_code=status.HTTP_400_BAD_REQUEST, 
+      detail=f"{prefix}: {message}", 
+      headers=headers
+    )
+
+
 class NotFoundException(HTTPException):
   def __init__(
     self,
