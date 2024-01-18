@@ -16,6 +16,9 @@ class RespEnum(Enum):
     GetUserRating = {
         "description": "Рейтинг пользователя",
     }
+    TakeBook = {
+        "description": "Взять книгу",
+    }
     InvalidData = {
         "model": ValidationErrorResponse,
         "description": "Ошибка валидации данных",

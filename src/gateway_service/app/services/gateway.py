@@ -1,24 +1,31 @@
 from uuid import UUID
+import sys
+from datetime import datetime
+
 from cruds.library import LibraryCRUD
 from cruds.reservation import ReservationCRUD
 from cruds.rating import RatingCRUD
-
 from schemas.library import (
   LibraryResponse,
   LibraryPaginationResponse,
   BookResponse,
   LibraryBookEntityResponse,
   LibraryBookResponse,
-  LibraryBookPaginationResponse
+  LibraryBookPaginationResponse,
+  LibraryBookUpdate,
 )
 from schemas.reservation import (
   Reservation,
   BookReservationResponse,
+  TakeBookRequest,
+  ReservationCreate,
+  TakeBookResponse,
 )
 from schemas.rating import (
   Rating,
   UserRatingResponse,
 )
+from enums.status import ReservationStatus, ConditionStatus
 from exceptions.http import BadRequestException, NotFoundException
 
 
@@ -137,5 +144,85 @@ class GatewayService():
       )
     else:
       raise NotFoundException(prefix="get_user_rating")
+    
+
+  async def take_book(
+      self,
+      X_User_Name: str,
+      take_book_request: TakeBookRequest,
+  ):
+    user_rented_books = await self._reservationCRUD.get_all_reservations(
+      size=sys.maxsize,
+      username=X_User_Name,
+      status=ReservationStatus.RENTED,
+    )
+    user_rating = await self.get_user_rating(
+      X_User_Name=X_User_Name,
+    )
+
+    if (len(user_rented_books) >= user_rating.stars):
+      raise BadRequestException(prefix="take_book")
+    
+    library_book = await self.__get_book_in_library(
+      libraryUid=take_book_request.libraryUid,
+      bookUid=take_book_request.bookUid,
+    )
+
+    if (library_book.availableCount == 0):
+      raise BadRequestException(prefix="take_book")
+    
+    await self._libraryCRUD.patch_library_book(
+      id=library_book.id,
+      update=LibraryBookUpdate(
+        available_count=library_book.availableCount - 1,
+      ),
+    )
+    
+    reservation_uid = await self._reservationCRUD.add_reservation(
+      ReservationCreate(
+        username=X_User_Name,
+        library_uid=take_book_request.libraryUid,
+        book_uid=take_book_request.bookUid,
+        status=ReservationStatus.RENTED,
+        start_date=datetime.now().strftime('%Y-%m-%d'),
+        till_date=take_book_request.tillDate.strftime('%Y-%m-%d'), # ???
+      )
+    )
+
+    reservation = await self._reservationCRUD.get_reservation_by_uid(
+      uid=reservation_uid,
+    )
+
+    return TakeBookResponse(
+      reservationUid=reservation.reservationUid,
+      status=reservation.status,
+      startDate=reservation.startDate,
+      tillDate=reservation.tillDate,
+      library=library_book.library,
+      book=library_book.book,
+      rating=user_rating,
+    )
 
 
+  async def __get_book_in_library(
+      self,
+      libraryUid: UUID,
+      bookUid: UUID,
+  ) -> LibraryBookEntityResponse:
+    library_books = await self._libraryCRUD.get_all_library_books(
+      size=sys.maxsize,
+    )
+
+    library_book_items: list[LibraryBookEntityResponse] = []
+    for library_book in library_books:
+      if library_book.book.bookUid == bookUid and library_book.library.libraryUid == libraryUid:
+        library_book_items.append(
+          library_book,
+        )
+
+    if len(library_book_items) > 1:
+      raise BadRequestException(prefix="__get_book_in_library")
+    elif len(library_book_items) == 0:
+      raise NotFoundException(prefix="__get_book_in_library")
+    else:
+      return library_book_items[0]

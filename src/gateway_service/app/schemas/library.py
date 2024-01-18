@@ -64,6 +64,12 @@ class LibraryBookEntityBase(BaseModel):
   availableCount: int
 
 
+class LibraryBookUpdate(BaseModel):
+  library_id: conint(ge=1) | None = None
+  book_id: conint(ge=1) | None = None
+  available_count: conint(ge=0) | None = None
+
+
 class LibraryBookEntity(LibraryBookEntityBase):
     id: int
 

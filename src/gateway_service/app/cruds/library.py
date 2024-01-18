@@ -1,3 +1,4 @@
+import json
 from uuid import UUID
 import requests
 from requests import Response
@@ -9,6 +10,7 @@ from schemas.library import (
   BookResponse,
   LibraryBookEntityResponse,
   LibraryPaginationResponse,
+  LibraryBookUpdate,
 )
 
 
@@ -131,4 +133,19 @@ class LibraryCRUD(BaseCRUD):
       genre=book_json["genre"],
       condition=book_json["condition"],
     )
+  
+
+  async def patch_library_book(
+      self,
+      id: int,
+      update: LibraryBookUpdate,
+  ):
+    response: Response = requests.get(
+      url=f'{self.http_path}library_book/{id}',
+      data=json.dumps(update.model_dump())
+    )
+    self._check_status_code(response.status_code)
+
+    library_book = response.json()
+    return library_book["id"]
   

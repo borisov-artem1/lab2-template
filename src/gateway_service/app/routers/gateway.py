@@ -14,6 +14,8 @@ from schemas.library import (
 )
 from schemas.reservation import (
   BookReservationResponse,
+  TakeBookRequest,
+  TakeBookResponse,
 )
 from schemas.rating import (
   UserRatingResponse,
@@ -142,4 +144,29 @@ async def get_user_rating(
       ratingCRUD=ratingCRUD,
     ).get_user_rating(
       X_User_Name=X_User_Name,
+    )
+
+
+@router.post(
+  "/reservations",
+  status_code=status.HTTP_200_OK,
+  response_model=TakeBookResponse,
+  responses={
+    status.HTTP_200_OK: RespEnum.TakeBook.value,
+  }
+)
+async def take_book(
+    libraryCRUD: Annotated[LibraryCRUD, Depends(get_library_crud)],
+    reservationCRUD: Annotated[ReservationCRUD, Depends(get_reservation_crud)],
+    ratingCRUD: Annotated[RatingCRUD, Depends(get_rating_crud)],
+    X_User_Name: Annotated[str, Header(max_length=80)],
+    take_book_request: TakeBookRequest,
+  ):
+  return await GatewayService(
+      libraryCRUD=libraryCRUD,
+      reservationCRUD=reservationCRUD,
+      ratingCRUD=ratingCRUD,
+    ).take_book(
+      X_User_Name=X_User_Name,
+      take_book_request=take_book_request,
     )
