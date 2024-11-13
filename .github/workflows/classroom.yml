@@ -1,13 +1,11 @@
 name: GitHub Classroom Workflow
 on:
-  push:
-    branches:
-      - main
-      - dev
-  pull_request:
-    branches:
-      - main
-      - dev
+  #push:
+  #  branches:
+  #    - dev
+  #pull_request:
+  #  branches:
+  #    - dev
 
 jobs:
   unit-tests:
