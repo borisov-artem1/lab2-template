@@ -57,13 +57,13 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/${{ secrets.SSH_USERNAME }}/library_system
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker compose down
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi gateway_service
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi library_service
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi reservation_service
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi rating_service
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi gateway_service
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker compose up -d
+            sudo -S docker-compose down
+            sudo -S docker rmi gateway_service
+            sudo -S docker rmi library_service
+            sudo -S docker rmi reservation_service
+            sudo -S docker rmi rating_service
+            sudo -S docker rmi gateway_service
+            sudo -S docker-compose up -d
 
   autograding:
     name: Autograding
