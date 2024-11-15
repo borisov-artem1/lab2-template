@@ -37,10 +37,16 @@ def custom_openapi():
   return app.openapi_schema
 
 
+
 app = FastAPI(
   title="Library System",
   version="v1",
 )
+
+@app.get("/manage/health", status_code=200)
+async def health_check():
+    return {"status": "ok"}
+
 app.include_router(api_router, prefix="/api/v1")
 app.openapi = custom_openapi
 
