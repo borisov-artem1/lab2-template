@@ -199,3 +199,7 @@ async def return_book(
       reservation_uid=reservationUid,
       return_book_request=retutn_book_request
     )
+
+@router.get("/manage/health", status_code=status.HTTP_200_OK)
+async def health_check():
+    return {"status": "Service is running"}
