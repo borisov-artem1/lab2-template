@@ -44,6 +44,11 @@ app = FastAPI(
     title="Rating Service",
     version="v1",
 )
+
+@app.get("/manage/health", status_code=200)
+async def health_check():
+    return {"status": "ok"}
+
 app.include_router(api_router, prefix="/api/v1")
 app.openapi = custom_openapi
 

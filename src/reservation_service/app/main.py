@@ -47,6 +47,9 @@ app = FastAPI(
 app.include_router(api_router, prefix="/api/v1")
 app.openapi = custom_openapi
 
+@app.get("/manage/health", status_code=200)
+async def health_check():
+    return {"status": "ok"}
 
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, exc):
